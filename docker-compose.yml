@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+  db:
+    container_name: mysql-standalone
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_USER: 'sa'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    networks:
+      - exchange-rate-net
+  exchange-rate:
+    container_name: exchange-rate
+    image: exchange-rate:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - exchange-rate-net
+    depends_on:
+      - db
+    restart: on-failure
+networks:
+  exchange-rate-net:

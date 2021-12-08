@@ -25,6 +25,8 @@ public class FixerAdapter implements ExchangeRateAdapter {
   private String apiUrl;
   @Value("${fixer.api.token}")
   private String token;
+  @Value("${base.currency}")
+  private String baseCurrency;
 
   private final RestTemplate restTemplate;
 
@@ -34,7 +36,7 @@ public class FixerAdapter implements ExchangeRateAdapter {
 
   @Override
   public Single<? extends ExchangeRateApiResponse> getApiResponse() {
-    String url = apiUrl + "?access_key={token}";
+    String url = apiUrl + "?access_key={token}&base="+baseCurrency;
     return Single.fromCallable(() -> callService(url));
   }
 
