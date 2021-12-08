@@ -3,7 +3,7 @@
 ## Used Stack 
 
    * Spring Boot
-   * Java 12
+   * Java 11
    * Spring Framework
    * Apache-maven-3.8.4
    * RestTemplate
@@ -38,6 +38,7 @@ docker-compose up --build
 If you want run application standalone please change your database configuration in application.properties
 
 ### Swagger
+
 http://localhost:8080/swagger-ui.html
 
 ###### By: Milad Ranjbari

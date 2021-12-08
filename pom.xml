@@ -14,7 +14,7 @@
 	<name>exchange-rate</name>
 	<description>Currency Exchange Rate</description>
 	<properties>
-		<java.version>12</java.version>
+		<java.version>11</java.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
 		<springdoc-openapi>1.5.13</springdoc-openapi>
 	</properties>
