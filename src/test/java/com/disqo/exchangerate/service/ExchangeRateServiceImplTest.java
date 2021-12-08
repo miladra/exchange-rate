@@ -9,9 +9,11 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,12 +27,10 @@ class ExchangeRateServiceImplTest {
     ExchangeRateService exchangeRateService;
 
     TestScheduler testScheduler;
-    private ApiCallTimeout timeout;
 
     @BeforeAll
     public void setUp() {
         testScheduler = new TestScheduler();
-        timeout = ApiCallTimeout.SECONDS(Long.valueOf(apiCallTimeout));
     }
 
     @Test
@@ -46,19 +46,24 @@ class ExchangeRateServiceImplTest {
                 .subscribeOn(testScheduler)
                 .test();
 
-        testScheduler.advanceTimeBy(timeout.getTimeout() + 100, TimeUnit.SECONDS);
+        testScheduler.advanceTimeBy(10, TimeUnit.SECONDS);
         ressultObserver.assertComplete()
-                       .assertValueCount(1)
-                       .assertValue(t -> t.equals("EUR"));
+                .assertValueCount(1)
+                .assertValue(t -> t.equals("EUR"));
     }
 
     @Test
     @Order(2)
     void findCurrency() {
 
-        ExchangeRateDtoResponse exchangeRateDtoResponse = exchangeRateService.findCurrency(util.parseToCurrency("EUR"));
+        TestObserver<ExchangeRateDtoResponse> testObserver = exchangeRateService.findCurrency(util.parseToCurrency("EUR"))
+                .subscribeOn(testScheduler)
+                .test();
 
-        assertEquals( Double.valueOf(1.2525) ,  exchangeRateDtoResponse.getRate());
+        testScheduler.advanceTimeBy( 10, TimeUnit.SECONDS);
+        testObserver.assertComplete()
+                .assertValueCount(1)
+                .assertValue(t -> Double.valueOf(1.2525).equals(t.getRate()));
     }
 
     @Test
@@ -69,11 +74,13 @@ class ExchangeRateServiceImplTest {
         exchangeRateDto.setBase("USD");
         exchangeRateDto.setCurrency("EUR");
 
-        exchangeRateService.Delete(exchangeRateDto).blockingGet();
+        exchangeRateService.Delete(exchangeRateDto)
+                .subscribeOn(testScheduler)
+                .test();
 
-        ExchangeRateDtoResponse exchangeRateDtoResponse = exchangeRateService.findCurrency(util.parseToCurrency("EUR"));
+        testScheduler.advanceTimeBy( 10, TimeUnit.SECONDS);
+        assertThrows(EntityNotFoundException.class, () -> exchangeRateService.findCurrency(util.parseToCurrency("EUR")).blockingGet());
 
-        assertNull(exchangeRateDtoResponse);
     }
 
 
@@ -86,20 +93,20 @@ class ExchangeRateServiceImplTest {
         exchangeRateDto.setCurrency("EUR");
         exchangeRateDto.setRate(Double.valueOf(1.555));
 
-         exchangeRateService.Add(exchangeRateDto).blockingGet();
+        exchangeRateService.Add(exchangeRateDto).blockingGet();
 
 
         exchangeRateDto.setRate(Double.valueOf(1.666));
-        TestObserver<Void> result= exchangeRateService.Update(exchangeRateDto)
+        TestObserver<Void> result = exchangeRateService.Update(exchangeRateDto)
                 .subscribeOn(testScheduler)
                 .test();
 
-        testScheduler.advanceTimeBy(timeout.getTimeout() + 100, TimeUnit.SECONDS);
+        testScheduler.advanceTimeBy( 10, TimeUnit.SECONDS);
         result.assertComplete();
 
-        ExchangeRateDtoResponse exchangeRateDtoResponse = exchangeRateService.findCurrency(util.parseToCurrency("EUR"));
+        ExchangeRateDtoResponse exchangeRateDtoResponse = exchangeRateService.findCurrency(util.parseToCurrency("EUR")).blockingGet();
 
-        assertEquals( Double.valueOf(1.666) ,  exchangeRateDtoResponse.getRate());
+        assertEquals(Double.valueOf(1.666), exchangeRateDtoResponse.getRate());
 
     }
 
@@ -123,15 +130,14 @@ class ExchangeRateServiceImplTest {
         exchangeRateService.Add(exchangeRateDtoGBP).blockingGet();
 
 
-        TestObserver<Double> result = exchangeRateService.Convert(util.parseToCurrency("EUR") , util.parseToCurrency("GBP") , Double.valueOf(1) )
+        TestObserver<Double> result = exchangeRateService.Convert(util.parseToCurrency("EUR"), util.parseToCurrency("GBP"), Double.valueOf(1))
                 .subscribeOn(testScheduler)
                 .test();
 
-        testScheduler.advanceTimeBy(timeout.getTimeout() + 100, TimeUnit.SECONDS);
+        testScheduler.advanceTimeBy(10, TimeUnit.SECONDS);
         result.assertComplete()
-              .assertValue(t -> Double.valueOf(1.0526315789473684).equals(t));
+                .assertValue(t -> Double.valueOf(1.0526315789473684).equals(t));
     }
-
 
 
 }

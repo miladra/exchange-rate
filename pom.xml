@@ -14,8 +14,9 @@
 	<name>exchange-rate</name>
 	<description>Currency Exchange Rate</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>12</java.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
+		<springdoc-openapi>1.5.13</springdoc-openapi>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -41,59 +42,35 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.26</version>
 		</dependency>
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>2.4.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.13</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.9</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxjava</artifactId>
 			<version>2.2.6</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.github.akarnokd</groupId>
 			<artifactId>rxjava2-extensions</artifactId>
 			<version>0.20.8</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.5.13</version>
+			<version>${springdoc-openapi}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-data-rest</artifactId>
+			<version>${springdoc-openapi}</version>
 		</dependency>
 
 		<dependency>

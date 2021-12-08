@@ -7,9 +7,6 @@ import com.disqo.exchangerate.service.LiveCurrencyExchangeRateService;
 import com.disqo.exchangerate.utility.util;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(value = "/v1/exchangerates")
-@Api(value = "Exchange Rate")
-@ApiResponses(value = {@ApiResponse(code = 200, message = "Success|OK"), @ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"), @ApiResponse(code = 404, message = "not found!!!"), @ApiResponse(code = 500, message = "Resource not found")})
+@RequestMapping(value = "/v1/exchangerate")
 public class ExchangeRateController {
 
     private final Logger logger = LoggerFactory.getLogger(ExchangeRateController.class);
@@ -33,6 +28,12 @@ public class ExchangeRateController {
     @Qualifier("LiveCurrencyExchangeRateService")
     LiveCurrencyExchangeRateService liveCurrencyExchangeRateService;
 
+    @GetMapping("/currency/{currency}")
+    public Single<ResponseEntity<BaseWebResponse>> get(@PathVariable("currency") String currency) {
+        return exchangeRateService.findCurrency(util.parseToCurrency(currency))
+                .subscribeOn(Schedulers.io())
+                .map(er -> ResponseEntity.ok(BaseWebResponse.successWithData(er)));
+    }
 
     @GetMapping("/all")
     public Single<ResponseEntity<BaseWebResponse>> getAll() {
@@ -60,13 +61,13 @@ public class ExchangeRateController {
     public Single<ResponseEntity<BaseWebResponse>> update(@RequestBody ExchangeRateDto exchangeRateDto) {
        return  exchangeRateService.Update(exchangeRateDto)
                     .subscribeOn(Schedulers.io())
-                    .toSingle(() -> ResponseEntity.ok(BaseWebResponse.successNoData()));
+                    .toSingle(() -> ResponseEntity.ok(BaseWebResponse.successWithData("Has been updated successfully")));
     }
 
     @DeleteMapping(value = "")
     public Single<ResponseEntity<BaseWebResponse>> delete(@RequestBody ExchangeRateDto exchangeRateDto) {
        return  exchangeRateService.Delete(exchangeRateDto)
                     .subscribeOn(Schedulers.io())
-                    .toSingle(() -> ResponseEntity.ok(BaseWebResponse.successNoData()));
+                    .toSingle(() -> ResponseEntity.ok(BaseWebResponse.successWithData("Has been deleted successfully")));
     }
 }

@@ -23,13 +23,13 @@ public class Scheduler {
     @Qualifier("ExchangeRateApiLiveCurrencyExchangeRateService")
     LiveCurrencyExchangeRateService exchangeRateApiLiveCurrencyExchangeRateService;
 
-    @Scheduled(fixedRateString ="${fixer.api.scheduler}")
+    @Scheduled(cron ="${fixer.api.scheduler}")
     public void fixerScheduledTask() {
         log.info("Fixer Rate Api will be run in scheduler");
         fixerLiveCurrencyExchangeRateService.getLiveExchangeRateUpdateCacheBaseTime();
     }
 
-    @Scheduled(fixedRateString ="${exchangerateapi.api.scheduler}")
+    @Scheduled(cron ="${exchangerateapi.api.scheduler}")
     public void exchangerateapiScheduledTask() {
         log.info("Exchange Rate Api will be run in scheduler");
         exchangeRateApiLiveCurrencyExchangeRateService.getLiveExchangeRateUpdateCacheBaseTime();
