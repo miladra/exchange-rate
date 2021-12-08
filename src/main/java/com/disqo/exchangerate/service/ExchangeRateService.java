@@ -13,7 +13,7 @@ public interface ExchangeRateService {
 
      Single<String> Add(ExchangeRateDto exchangeRateDto);
 
-     ExchangeRateDtoResponse findCurrency(Currency currency);
+     Single<ExchangeRateDtoResponse> findCurrency(Currency currency);
 
      Single<Double> Convert(Currency from, Currency to, Double amount);
 

@@ -32,8 +32,8 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
 
     @Override
-    public ExchangeRateDtoResponse findCurrency(Currency currency) {
-        return findCurrencyInsideCacheOrDatabase(util.parseToCurrency(baseCurrency),currency);
+    public Single<ExchangeRateDtoResponse> findCurrency(Currency currency) {
+        return Single.just(findCurrencyInsideCacheOrDatabase(util.parseToCurrency(baseCurrency),currency));
     }
 
     @Override
@@ -110,8 +110,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         } else {
             CurrencyExchangeRate foundCurrency = exchangeRateRepository.findTopByBaseAndNameOrderBySyncDateDesc(base.toString() , currency.toString());
             if (foundCurrency == null) {
-                logger.info("Currency not found");
-                return null;
+                throw new EntityNotFoundException();
             }
             exchangeRateDtoResponse.setCurrency(currency.toString());
             exchangeRateDtoResponse.setRate(foundCurrency.getRate());
