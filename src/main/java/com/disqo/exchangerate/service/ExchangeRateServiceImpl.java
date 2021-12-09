@@ -90,7 +90,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     @Override
     public Completable Delete(ExchangeRateDto exchangeRateDto) {
         return Completable.create(completableSubscriber -> {
-            CurrencyExchangeRate currencyExchangeRate = exchangeRateRepository.findTopByBaseAndNameOrderBySyncDateDesc(exchangeRateDto.getBase(), exchangeRateDto.getCurrency());
+            CurrencyExchangeRate currencyExchangeRate = exchangeRateRepository.findTopByBaseAndNameAndRateOrderBySyncDateDesc(exchangeRateDto.getBase(), exchangeRateDto.getCurrency(), exchangeRateDto.getRate());
             if (currencyExchangeRate == null)
                 completableSubscriber.onError(new EntityNotFoundException());
             else {

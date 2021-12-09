@@ -9,4 +9,5 @@ public interface ExchangeRateRepository extends JpaRepository<CurrencyExchangeRa
 
 
     CurrencyExchangeRate findTopByBaseAndNameOrderBySyncDateDesc(String base, String currency);
+    CurrencyExchangeRate findTopByBaseAndNameAndRateOrderBySyncDateDesc(String base, String currency, Double rate);
 }

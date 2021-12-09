@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 
 @RestController
 @RequestMapping(value = "/v1/exchangerate")
@@ -35,11 +37,13 @@ public class ExchangeRateController {
                 .map(er -> ResponseEntity.ok(BaseWebResponse.successWithData(er)));
     }
 
-    @GetMapping("/all")
-    public Single<ResponseEntity<BaseWebResponse>> getAll() {
+    @GetMapping("/live")
+    public Single<ResponseEntity<BaseWebResponse>> getLive() {
         return liveCurrencyExchangeRateService.getLiveExchangeRateUpdateCacheBaseTime()
                 .subscribeOn(Schedulers.io())
-                .map(er -> ResponseEntity.ok(BaseWebResponse.successWithData(er)));
+                .map(er -> Objects.nonNull(er.getCurrencyRates()) && er.getCurrencyRates().size() > 0
+                          ? ResponseEntity.ok(BaseWebResponse.successWithData(er))
+                          : ResponseEntity.ok(BaseWebResponse.error("No data was received from public APIs.")) );
     }
 
     @GetMapping(value = "/from/{from}/to/{to}/amount/{amount}")

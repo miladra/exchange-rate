@@ -73,6 +73,7 @@ class ExchangeRateServiceImplTest {
         ExchangeRateDto exchangeRateDto = new ExchangeRateDto();
         exchangeRateDto.setBase("USD");
         exchangeRateDto.setCurrency("EUR");
+        exchangeRateDto.setRate(Double.valueOf(1.2525));
 
         exchangeRateService.Delete(exchangeRateDto)
                 .subscribeOn(testScheduler)

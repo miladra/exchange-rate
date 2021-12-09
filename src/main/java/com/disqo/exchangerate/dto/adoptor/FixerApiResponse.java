@@ -8,7 +8,9 @@ import java.util.HashMap;
 @Data
 public class FixerApiResponse implements ExchangeRateApiResponse {
 
+
   private String success;
+  private String error;
   private String timestamp;
   private String base;
   private HashMap<String, Double> rates;

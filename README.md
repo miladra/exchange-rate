@@ -41,4 +41,7 @@ If you want run application standalone please change your database configuration
 
 http://localhost:8080/swagger-ui.html
 
+user:admin
+password:admin
+
 ###### By: Milad Ranjbari
