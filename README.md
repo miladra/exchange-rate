@@ -1,4 +1,4 @@
-# currency-rate-exchange
+# exchange rate
 
 ## Used Stack 
 
