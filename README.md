@@ -14,6 +14,7 @@
    * Junit
   
 # Thought Process
+* please read requirements.md
 * I assumed that the application receives the exchange rate from different public web services based on the same base currency, as I saw they have this ability.
 * I wrote two approaches for integrating exchange rates, time or higher rate.
 * In order to better performance, I integrated live data into a ConcurrentHashMap, and an API exposes those data, as well as I stored data into the database.
