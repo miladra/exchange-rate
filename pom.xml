@@ -8,7 +8,7 @@
 		<version>2.6.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.disqo</groupId>
+	<groupId>com.amazing</groupId>
 	<artifactId>exchangerate</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>exchange-rate</name>
